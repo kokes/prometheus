@@ -100,6 +100,8 @@ const initialState: QueryPageState = {
 };
 
 const updateURL = (panels: Panel[]) => {
+  console.log("encoding url")
+  console.log(encodePanelOptionsToURLParams(panels))
   const query = "?" + encodePanelOptionsToURLParams(panels).toString();
   window.history.pushState({}, "", query);
 };

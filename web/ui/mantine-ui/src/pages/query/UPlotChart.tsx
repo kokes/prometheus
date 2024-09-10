@@ -61,10 +61,24 @@ const UPlotChart: FC<UPlotChartProps> = ({
       width,
       data,
       useLocalTime,
-      anchorYAxisAtZero,
       theme === "light",
       onSelectRange
     );
+
+    console.log("NOT ANCHORING");
+    console.log("ANCHOR VALUE: " + anchorYAxisAtZero);
+    // TODO(PR): broken
+    if (anchorYAxisAtZero) {
+      console.log("ANCHORING AT ZERO");
+      // force 0 to be the sum minimum this instead of the bottom series
+      opts.scales = opts.scales || {};
+      opts.scales.y = {
+        range: (_u, _min, max) => {
+          const minMax = uPlot.rangeNum(0, max, 0.1, true);
+          return [0, minMax[1]];
+        },
+      };
+    }
 
     if (displayMode === GraphDisplayMode.Stacked) {
       setProcessedData(setStackedOpts(opts, seriesData).data);

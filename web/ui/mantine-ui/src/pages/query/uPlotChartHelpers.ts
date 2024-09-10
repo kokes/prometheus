@@ -289,7 +289,6 @@ export const getUPlotOptions = (
   width: number,
   result: RangeSamples[],
   useLocalTime: boolean,
-  anchorYAxisAtZero: boolean,
   light: boolean,
   onSelectRange: (_start: number, _end: number) => void
 ): uPlot.Options => ({
@@ -341,7 +340,7 @@ export const getUPlotOptions = (
       grid: {
         show: false,
         stroke: light ? "#eee" : "#333",
-        width: anchorYAxisAtZero ? 2 : 2,
+        width: 2,
         dash: [],
       },
     },
@@ -364,22 +363,6 @@ export const getUPlotOptions = (
       size: autoPadLeft,
     },
   ],
-  // opts.scales = opts.scales || {};
-  // opts.scales.y = {
-  //   range: (_u, _min, max) => {
-  //     const minMax = uPlot.rangeNum(0, max, 0.1, true);
-  //     return [0, minMax[1]];
-  //   },
-  // };
-  scales: {
-    y: {
-      range: (_u, _min, max) => {
-        // Use uPlot's rangeNum to calculate the range for the y scale
-        const minMax = uPlot.rangeNum(0, max, 0.1, true);
-        return [0, minMax[1]];
-      },
-    },
-  },
   series: [
     {},
     ...result.map(

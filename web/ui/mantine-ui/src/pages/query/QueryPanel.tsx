@@ -56,6 +56,8 @@ const QueryPanel: FC<PanelProps> = ({ idx, metricNames }) => {
   const panel = useAppSelector((state) => state.queryPage.panels[idx]);
   const dispatch = useAppDispatch();
 
+  const [anchorYAxisAtZero, setAnchorYAxisAtZero] = useState(false);
+
   const [selectedNode, setSelectedNode] = useState<{
     id: string;
     node: ASTNode;
@@ -250,21 +252,26 @@ const QueryPanel: FC<PanelProps> = ({ idx, metricNames }) => {
 
               <Checkbox
                 label="y axis starts at zero"
-                onChange={(value) =>
+                checked={anchorYAxisAtZero}
+                onChange={(value) => {
+                  setAnchorYAxisAtZero(value.currentTarget.checked)
+
+                  console.log("dispatching with " + value.currentTarget.checked)
+
                   dispatch(
                     setVisualizer({
                       idx,
                       visualizer: {
                         ...panel.visualizer,
-                        anchorYAxisAtZero: value.target.checked,
+                        anchorYAxisAtZero: value.currentTarget.checked,
                       },
                     })
                   )
-                }
 
+                }}
               />
 
-              <SegmentedControl
+              < SegmentedControl
                 onChange={(value) =>
                   dispatch(
                     setVisualizer({
