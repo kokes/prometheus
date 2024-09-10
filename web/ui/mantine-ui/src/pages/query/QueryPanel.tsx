@@ -1,6 +1,7 @@
 import {
   Group,
   Tabs,
+  Checkbox,
   Center,
   Space,
   Box,
@@ -247,6 +248,22 @@ const QueryPanel: FC<PanelProps> = ({ idx, metricNames }) => {
                 Show exemplars
               </Button> */}
 
+              <Checkbox
+                label="y axis starts at zero"
+                onChange={(value) =>
+                  dispatch(
+                    setVisualizer({
+                      idx,
+                      visualizer: {
+                        ...panel.visualizer,
+                        anchorYAxisAtZero: value.target.checked,
+                      },
+                    })
+                  )
+                }
+
+              />
+
               <SegmentedControl
                 onChange={(value) =>
                   dispatch(
@@ -300,6 +317,7 @@ const QueryPanel: FC<PanelProps> = ({ idx, metricNames }) => {
             range={panel.visualizer.range}
             resolution={panel.visualizer.resolution}
             showExemplars={panel.visualizer.showExemplars}
+            anchorYAxisAtZero={panel.visualizer.anchorYAxisAtZero}
             displayMode={panel.visualizer.displayMode}
             retriggerIdx={retriggerIdx}
             onSelectRange={onSelectRange}

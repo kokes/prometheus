@@ -13,17 +13,17 @@ export enum GraphDisplayMode {
 
 export type GraphResolution =
   | {
-      type: "auto";
-      density: "low" | "medium" | "high";
-    }
+    type: "auto";
+    density: "low" | "medium" | "high";
+  }
   | {
-      type: "fixed";
-      step: number; // Resolution step in milliseconds.
-    }
+    type: "fixed";
+    step: number; // Resolution step in milliseconds.
+  }
   | {
-      type: "custom";
-      step: number; // Resolution step in milliseconds.
-    };
+    type: "custom";
+    step: number; // Resolution step in milliseconds.
+  };
 
 // From the UI settings, compute the effective resolution
 // in milliseconds to use for the graph query.
@@ -58,6 +58,7 @@ export interface Visualizer {
   resolution: GraphResolution;
   displayMode: GraphDisplayMode;
   showExemplars: boolean;
+  anchorYAxisAtZero: boolean;
 }
 
 export type Panel = {
@@ -86,6 +87,7 @@ export const newDefaultPanel = (): Panel => ({
     resolution: { type: "auto", density: "medium" },
     displayMode: GraphDisplayMode.Lines,
     showExemplars: false,
+    anchorYAxisAtZero: false,
   },
 });
 

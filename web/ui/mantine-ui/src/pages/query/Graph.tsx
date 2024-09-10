@@ -23,6 +23,7 @@ export interface GraphProps {
   range: number;
   resolution: GraphResolution;
   showExemplars: boolean;
+  anchorYAxisAtZero: boolean,
   displayMode: GraphDisplayMode;
   retriggerIdx: number;
   onSelectRange: (start: number, end: number) => void;
@@ -35,6 +36,7 @@ const Graph: FC<GraphProps> = ({
   range,
   resolution,
   showExemplars,
+  anchorYAxisAtZero,
   displayMode,
   retriggerIdx,
   onSelectRange,
@@ -46,17 +48,17 @@ const Graph: FC<GraphProps> = ({
     node === null
       ? expr
       : serializeNode(
-          node.type === nodeType.matrixSelector
-            ? {
-                type: nodeType.vectorSelector,
-                name: node.name,
-                matchers: node.matchers,
-                offset: node.offset,
-                timestamp: node.timestamp,
-                startOrEnd: node.startOrEnd,
-              }
-            : node
-        );
+        node.type === nodeType.matrixSelector
+          ? {
+            type: nodeType.vectorSelector,
+            name: node.name,
+            matchers: node.matchers,
+            offset: node.offset,
+            timestamp: node.timestamp,
+            startOrEnd: node.startOrEnd,
+          }
+          : node
+      );
 
   const effectiveEndTime = (endTime !== null ? endTime : Date.now()) / 1000;
   const startTime = effectiveEndTime - range / 1000;
@@ -92,6 +94,7 @@ const Graph: FC<GraphProps> = ({
           startTime: startTime,
           endTime: effectiveEndTime,
           resolution: effectiveResolution,
+          anchorYAxisAtZero: anchorYAxisAtZero,
         },
       });
     }
@@ -171,10 +174,10 @@ const Graph: FC<GraphProps> = ({
           h={570}
           overlayProps={{ radius: "sm", blur: 0.5 }}
           loaderProps={{ type: "dots", color: "gray.6" }}
-          // loaderProps={{
-          //   children: <Skeleton m={0} w="100%" h="100%" />,
-          // }}
-          // styles={{ loader: { width: "100%", height: "100%" } }}
+        // loaderProps={{
+        //   children: <Skeleton m={0} w="100%" h="100%" />,
+        // }}
+        // styles={{ loader: { width: "100%", height: "100%" } }}
         />
         <UPlotChart
           data={dataAndRange.data.data.result}

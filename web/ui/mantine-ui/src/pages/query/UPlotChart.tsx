@@ -16,6 +16,7 @@ export interface UPlotChartRange {
   startTime: number;
   endTime: number;
   resolution: number;
+  anchorYAxisAtZero: boolean;
 }
 
 export interface UPlotChartProps {
@@ -31,7 +32,7 @@ export interface UPlotChartProps {
 // uPlot format and sets up the uPlot options object depending on the UI settings.
 const UPlotChart: FC<UPlotChartProps> = ({
   data,
-  range: { startTime, endTime, resolution },
+  range: { startTime, endTime, resolution, anchorYAxisAtZero },
   width,
   displayMode,
   onSelectRange,
@@ -60,6 +61,7 @@ const UPlotChart: FC<UPlotChartProps> = ({
       width,
       data,
       useLocalTime,
+      anchorYAxisAtZero,
       theme === "light",
       onSelectRange
     );

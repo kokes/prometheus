@@ -73,12 +73,12 @@ const formatLabels = (labels: { [key: string]: string }): string => `
               ${Object.keys(labels).length === 0 ? '<div class="no-labels">no labels</div>' : ""}
               ${labels["__name__"] ? `<div><strong>${escapeHTML(labels["__name__"])}</strong></div>` : ""}
               ${Object.keys(labels)
-                .filter((k) => k !== "__name__")
-                .map(
-                  (k) =>
-                    `<div><strong>${escapeHTML(k)}</strong>: ${escapeHTML(labels[k])}</div>`
-                )
-                .join("")}
+    .filter((k) => k !== "__name__")
+    .map(
+      (k) =>
+        `<div><strong>${escapeHTML(k)}</strong>: ${escapeHTML(labels[k])}</div>`
+    )
+    .join("")}
             </div>`;
 
 const tooltipPlugin = (useLocalTime: boolean, data: AlignedData) => {
@@ -289,6 +289,7 @@ export const getUPlotOptions = (
   width: number,
   result: RangeSamples[],
   useLocalTime: boolean,
+  anchorYAxisAtZero: boolean,
   light: boolean,
   onSelectRange: (_start: number, _end: number) => void
 ): uPlot.Options => ({
@@ -340,11 +341,12 @@ export const getUPlotOptions = (
       grid: {
         show: false,
         stroke: light ? "#eee" : "#333",
-        width: 2,
+        width: anchorYAxisAtZero ? 2 : 2,
         dash: [],
       },
     },
     // Y axis (sample value).
+    // TODO(PR): incorporate anchorYAxisAtZero in scales https://github.com/leeoniya/uPlot/issues/526#issuecomment-857189846
     {
       values: (_u: uPlot, splits: number[]) => splits.map(formatYAxisTickValue),
       ticks: {
@@ -362,6 +364,22 @@ export const getUPlotOptions = (
       size: autoPadLeft,
     },
   ],
+  // opts.scales = opts.scales || {};
+  // opts.scales.y = {
+  //   range: (_u, _min, max) => {
+  //     const minMax = uPlot.rangeNum(0, max, 0.1, true);
+  //     return [0, minMax[1]];
+  //   },
+  // };
+  scales: {
+    y: {
+      range: (_u, _min, max) => {
+        // Use uPlot's rangeNum to calculate the range for the y scale
+        const minMax = uPlot.rangeNum(0, max, 0.1, true);
+        return [0, minMax[1]];
+      },
+    },
+  },
   series: [
     {},
     ...result.map(
